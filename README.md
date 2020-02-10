@@ -1,0 +1,2 @@
+# oneaws
+OneLogin + AWS STS
