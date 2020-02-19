@@ -29,12 +29,19 @@ module Oneaws
       end
       
       mfa = response.mfa
-      print "input otp code (#{mfa.devices[0].type}): "
-      otp_code = STDIN.gets.chomp
 
-      response = @onelogin.get_saml_assertion_verifying(app_id, mfa.devices[0].id, mfa.state_token, otp_code, nil)
+      # sent push notification to OneLogin Protect
+      response = @onelogin.get_saml_assertion_verifying(app_id, mfa.devices[0].id, mfa.state_token, nil, nil, false)
       if response.nil?
         raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
+      end
+
+      while response.type != "success" do
+        sleep 1
+        response = @onelogin.get_saml_assertion_verifying(app_id, mfa.devices[0].id, mfa.state_token, nil, nil, true)
+        if response.nil?
+          raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
+        end
       end
 
       saml_assertion = response.saml_response
