@@ -7,7 +7,7 @@ module Oneaws
     default_command :getkey
 
     desc 'getkey', 'getkey'
-    option :update_aws_credentails, aliases: "-u", type: :boolean, default: true
+    option :update_aws_credentials, aliases: "-u", type: :boolean, default: true
     option :profile, aliases: "-p", type: :string, default: "oneaws"
     option :eval, type: :string, enum: ["bash", "fish"]
     def getkey
