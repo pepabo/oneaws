@@ -4,6 +4,7 @@ require 'aws-sdk-core'
 module Oneaws
   class Client
     class SamlRequestError < StandardError; end
+    class MfaDeviceNotFoundError < StandardError; end;
 
     def initialize
       @onelogin = OneLogin::Api::Client.new({
@@ -27,18 +28,24 @@ module Oneaws
       if response.nil?
         raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
       end
-      
+
       mfa = response.mfa
 
       # sent push notification to OneLogin Protect
-      response = @onelogin.get_saml_assertion_verifying(app_id, mfa.devices[0].id, mfa.state_token, nil, nil, false)
+      mfa_device = mfa.devices.select{|device| device.type == "OneLogin Protect"}&.first
+
+      if mfa_device.nil?
+        raise MfaDeviceNotFoundError.new("OneLogin Protect device not found.")
+      end
+
+      response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, nil, nil, false)
       if response.nil?
         raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
       end
 
       while response.type != "success" do
         sleep 1
-        response = @onelogin.get_saml_assertion_verifying(app_id, mfa.devices[0].id, mfa.state_token, nil, nil, true)
+        response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, nil, nil, true)
         if response.nil?
           raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
         end
