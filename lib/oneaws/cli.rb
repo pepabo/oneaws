@@ -24,6 +24,7 @@ module Oneaws
       if options["update_aws_credentials"]
         credential_file = File.expand_path("~/.aws/credentials")
         unless inifile = IniFile.load(credential_file)
+          FileUtils.mkdir_p(File.dirname(credential_file))
           inifile = IniFile.new
         end
 
