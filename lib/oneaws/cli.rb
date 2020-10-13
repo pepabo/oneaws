@@ -56,7 +56,7 @@ module Oneaws
 
     # AWS の credential を以下の順番で存在チェックをする
     # 1. ~/.aws/credentials
-    # 2. ~/.aws/config/credentials
+    # 2. ~/.config/aws/credentials
     # 存在しない場合は順番1つ目のものを用いる
     def find_credentials
       credentials = ["~/.aws/credentials", "~/config/aws/credentials"]
