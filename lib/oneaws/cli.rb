@@ -22,7 +22,7 @@ module Oneaws
       credential = client.issue_credential(params)
 
       if options["update_aws_credentials"]
-        credential_file = File.expand_path("~/.aws/credentials")
+        credential_file = File.expand_path(find_credentials)
         unless inifile = IniFile.load(credential_file)
           FileUtils.mkdir_p(File.dirname(credential_file))
           inifile = IniFile.new
@@ -49,6 +49,22 @@ module Oneaws
         set -x AWS_SECRET_ACCESS_KEY '#{credential.secret_access_key}'
         set -x AWS_SESSION_TOKEN '#{credential.session_token}'
         EOS
+      end
+    end
+
+    private
+
+    # AWS の credential を以下の順番で存在チェックをする
+    # 1. ~/.aws/credentials
+    # 2. ~/.config/aws/credentials
+    # 存在しない場合は順番1つ目のものを用いる
+    def find_credentials
+      credentials = ["~/.aws/credentials", "~/.config/aws/credentials"]
+      credential = credentials.find{|c| File.exists? File.expand_path(c) }
+      if credential
+        credential
+      else
+        credentials.first
       end
     end
   end
