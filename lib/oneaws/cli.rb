@@ -22,7 +22,7 @@ module Oneaws
       credential = client.issue_credential(params)
 
       if options["update_aws_credentials"]
-        credential_file = File.expand_path("~/.aws/credentials")
+        credential_file = File.expand_path(find_credentials)
         unless inifile = IniFile.load(credential_file)
           FileUtils.mkdir_p(File.dirname(credential_file))
           inifile = IniFile.new
@@ -50,6 +50,12 @@ module Oneaws
         set -x AWS_SESSION_TOKEN '#{credential.session_token}'
         EOS
       end
+    end
+
+    private
+
+    def find_credentials
+      "~/.aws/credentials"
     end
   end
 end
