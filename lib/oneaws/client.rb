@@ -1,5 +1,6 @@
 require 'onelogin'
 require 'aws-sdk-core'
+require 'io/console'
 
 module Oneaws
   class Client
@@ -32,13 +33,20 @@ module Oneaws
       mfa = response.mfa
 
       # sent push notification to OneLogin Protect
-      mfa_device = mfa.devices.select{|device| device.type == "OneLogin Protect"}&.first
+      mfa_device = mfa.devices[0]
 
       if mfa_device.nil?
-        raise MfaDeviceNotFoundError.new("OneLogin Protect device not found.")
+        raise MfaDeviceNotFoundError.new("MFA device not found.")
       end
 
-      response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, nil, nil, false)
+      otp_token = nil
+      if mfa_device.type != "OneLogin Protect"
+        print "input OTP of #{mfa_device.type}: "
+        otp_token = STDIN.noecho(&:gets)
+      end
+
+      response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, otp_token, nil, false)
+      
       if response.nil?
         raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
       end
