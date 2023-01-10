@@ -44,9 +44,9 @@ module Oneaws
       end
 
       otp_token = nil
-      if mfa_device.type != "OneLogin Protect"
+      otp_token = if mfa_device.type != "OneLogin Protect"
         print "input OTP of #{mfa_device.type}: "
-        otp_token = STDIN.noecho(&:gets)
+        STDIN.noecho(&:gets)
       end
 
       response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, otp_token, nil, false)
