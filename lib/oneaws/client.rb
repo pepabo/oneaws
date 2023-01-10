@@ -33,7 +33,11 @@ module Oneaws
       mfa = response.mfa
 
       # sent push notification to OneLogin Protect
-      mfa_device = mfa.devices.first
+      supported_device_types = [
+        "OneLogin Protect",
+        "Google Authenticator"
+      ]
+      mfa_device = mfa.devices.select{|device| supported_device_types.include?(device.type)}&.first
 
       if mfa_device.nil?
         raise MfaDeviceNotFoundError.new("MFA device not found.")
