@@ -33,7 +33,7 @@ module Oneaws
       mfa = response.mfa
 
       # sent push notification to OneLogin Protect
-      mfa_device = mfa.devices[0]
+      mfa_device = mfa.devices.first
 
       if mfa_device.nil?
         raise MfaDeviceNotFoundError.new("MFA device not found.")
