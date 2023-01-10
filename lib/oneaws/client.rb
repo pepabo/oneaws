@@ -43,7 +43,6 @@ module Oneaws
         "OneLogin Protect"
       ]
 
-      otp_token = nil
       otp_token = unless device_types_that_do_not_require_token.include?(mfa_device.type)
         print "input OTP of #{mfa_device.type}: "
         STDIN.noecho(&:gets)
