@@ -60,7 +60,7 @@ module Oneaws
     # 存在しない場合は順番1つ目のものを用いる
     def find_credentials
       credentials = ["~/.aws/credentials", "~/.config/aws/credentials"]
-      credential = credentials.find{|c| File.exists? File.expand_path(c) }
+      credential = credentials.find{|c| File.exist? File.expand_path(c) }
       if credential
         credential
       else
