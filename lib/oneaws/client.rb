@@ -31,20 +31,24 @@ module Oneaws
       end
 
       mfa = response.mfa
-      puts "\nAvailable MFA devices:"
       
-      mfa.devices.each_with_index do |device, index|
-        puts "#{index + 1}. #{device.type} (ID: #{device.id})"
+      if mfa.devices.length == 1
+        mfa_device = mfa.devices.first
+      else
+        puts "\nAvailable MFA devices:"
+        mfa.devices.each_with_index do |device, index|
+          puts "#{index + 1}. #{device.type} (ID: #{device.id})"
+        end
+
+        print "\nSelect MFA device (1-#{mfa.devices.length}): "
+        selection = STDIN.gets.chomp.to_i
+
+        if selection < 1 || selection > mfa.devices.length
+          raise MfaDeviceNotFoundError.new("Invalid device selection.")
+        end
+
+        mfa_device = mfa.devices[selection - 1]
       end
-
-      print "\nSelect MFA device (1-#{mfa.devices.length}): "
-      selection = STDIN.gets.chomp.to_i
-
-      if selection < 1 || selection > mfa.devices.length
-        raise MfaDeviceNotFoundError.new("Invalid device selection.")
-      end
-
-      mfa_device = mfa.devices[selection - 1]
 
       device_types_that_do_not_require_token = [
         "OneLogin Protect"
