@@ -37,3 +37,17 @@ oneaws
 ```
 
 `-u` オプションをつけていると `~/.aws/credentials` に追記されます(default: true)。
+
+### ONEAWS_MFA_DEVICE
+
+MFA デバイスを複数登録している場合、以下のようにデバイスの選択を求められます。
+
+```
+Available MFA devices:
+1. OneLogin Protect (ID: ***)
+2. OneLogin Authn (ID: ***)
+
+Select MFA device (1-2):
+```
+
+デバイスの選択が面倒な場合は、環境変数 `ONEAWS_MFA_DEVICE` を指定することで、指定した番号のデバイスを自動で選択できます。上記を例にすると、`1. OneLogin Protect` を選ぶ場合は `ONEAWS_MFA_DEVICE=1` と指定します。
