@@ -28,4 +28,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'inifile'
   spec.add_dependency 'onelogin', '~> 1.6'
   spec.add_dependency 'thor'
+  spec.add_dependency 'base64'
+  spec.add_dependency 'logger'
 end
