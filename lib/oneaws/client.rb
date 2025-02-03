@@ -31,25 +31,8 @@ module Oneaws
       end
 
       mfa = response.mfa
+      mfa_device = select_mfa_device(mfa)
       
-      if mfa.devices.length == 1
-        mfa_device = mfa.devices.first
-      else
-        puts "\nAvailable MFA devices:"
-        mfa.devices.each_with_index do |device, index|
-          puts "#{index + 1}. #{device.type} (ID: #{device.id})"
-        end
-
-        print "\nSelect MFA device (1-#{mfa.devices.length}): "
-        selection = STDIN.gets.chomp.to_i
-
-        if selection < 1 || selection > mfa.devices.length
-          raise MfaDeviceNotFoundError.new("Invalid device selection.")
-        end
-
-        mfa_device = mfa.devices[selection - 1]
-      end
-
       device_types_that_do_not_require_token = [
         "OneLogin Protect"
       ]
@@ -82,6 +65,28 @@ module Oneaws
         saml_assertion: saml_assertion,
       }
       @aws.assume_role_with_saml(params)[:credentials]
+    end
+
+    private
+
+    def select_mfa_device(mfa)
+      if mfa.devices.length == 1
+        return mfa.devices.first
+      end
+
+      puts "\nAvailable MFA devices:"
+      mfa.devices.each_with_index do |device, index|
+        puts "#{index + 1}. #{device.type} (ID: #{device.id})"
+      end
+
+      print "\nSelect MFA device (1-#{mfa.devices.length}): "
+      selection = STDIN.gets.chomp.to_i
+
+      if selection < 1 || selection > mfa.devices.length
+        raise MfaDeviceNotFoundError.new("Invalid device selection.")
+      end
+
+      mfa.devices[selection - 1]
     end
   end
 end
