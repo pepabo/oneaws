@@ -74,6 +74,16 @@ module Oneaws
         return mfa.devices.first
       end
 
+      if selection = ENV["ONEAWS_MFA_DEVICE"] &.to_i
+
+        if selection <= 0
+          warn "ONEAWS_MFA_DEVICE must be >= 1"
+          exit 1
+        end
+
+        return mfa.devices[selection - 1]
+      end
+
       puts "\nAvailable MFA devices:"
       mfa.devices.each_with_index do |device, index|
         puts "#{index + 1}. #{device.type} (ID: #{device.id})"
