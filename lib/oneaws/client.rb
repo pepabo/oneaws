@@ -15,7 +15,7 @@ module Oneaws
       })
 
       @aws = Aws::STS::Client.new(
-        credentials: Aws::AssumeRoleCredentials,
+        credentials: nil,
         region: ENV['AWS_REGION'] || 'ap-northeast-1',
       )
     end
