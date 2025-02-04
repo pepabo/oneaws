@@ -45,7 +45,7 @@ MFA デバイスを複数登録している場合、以下のようにデバイ�
 ```
 Available MFA devices:
 1. OneLogin Protect (ID: ***)
-2. OneLogin Authn (ID: ***)
+2. OneLogin Auth (ID: ***)
 
 Select MFA device (1-2):
 ```
