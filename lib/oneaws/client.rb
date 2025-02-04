@@ -75,7 +75,6 @@ module Oneaws
       end
 
       if selection = ENV["ONEAWS_MFA_DEVICE"] &.to_i
-
         if selection <= 0
           warn "ONEAWS_MFA_DEVICE must be >= 1"
           exit 1
