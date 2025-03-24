@@ -31,32 +31,35 @@ module Oneaws
       end
 
       mfa = response.mfa
-      mfa_device = select_mfa_device(mfa)
-      
-      device_types_that_do_not_require_token = [
-        "OneLogin Protect"
-      ]
 
-      otp_token = if device_types_that_do_not_require_token.include?(mfa_device.type)
-        nil
-      elsif otp
-        otp
-      else
-        print "input OTP of #{mfa_device.type}: "
-        STDIN.noecho(&:gets)
-      end
+      if mfa # mfa required
+        mfa_device = select_mfa_device(mfa)
+        
+        device_types_that_do_not_require_token = [
+          "OneLogin Protect"
+        ]
 
-      response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, otp_token, nil, false)
-      
-      if response.nil?
-        raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
-      end
+        otp_token = if device_types_that_do_not_require_token.include?(mfa_device.type)
+          nil
+        elsif otp
+          otp
+        else
+          print "input OTP of #{mfa_device.type}: "
+          STDIN.noecho(&:gets)
+        end
 
-      while response.type != "success" do
-        sleep 1
-        response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, nil, nil, true)
+        response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, otp_token, nil, false)
+        
         if response.nil?
           raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
+        end
+
+        while response.type != "success" do
+          sleep 1
+          response = @onelogin.get_saml_assertion_verifying(app_id, mfa_device.id, mfa.state_token, nil, nil, true)
+          if response.nil?
+            raise SamlRequestError.new("#{@onelogin.error} #{@onelogin.error_description}")
+          end
         end
       end
 
