@@ -20,7 +20,7 @@ module Oneaws
       )
     end
 
-    def issue_credential(options)
+    def issue_credential(options, otp = nil)
       username = options[:username]
       password = options[:password]
       app_id = options[:app_id]
@@ -37,7 +37,11 @@ module Oneaws
         "OneLogin Protect"
       ]
 
-      otp_token = unless device_types_that_do_not_require_token.include?(mfa_device.type)
+      otp_token = if device_types_that_do_not_require_token.include?(mfa_device.type)
+        nil
+      elsif otp
+        otp
+      else
         print "input OTP of #{mfa_device.type}: "
         STDIN.noecho(&:gets)
       end
