@@ -52,6 +52,11 @@ module Oneaws
       end
     end
 
+    desc 'version', 'Show version'
+    def version
+      puts Oneaws::VERSION
+    end
+
     private
 
     # AWS の credential を以下の順番で存在チェックをする
