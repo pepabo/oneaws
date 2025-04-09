@@ -10,6 +10,7 @@ module Oneaws
     option :update_aws_credentials, aliases: "-u", type: :boolean, default: true
     option :profile, aliases: "-p", type: :string, default: "oneaws"
     option :eval, type: :string, enum: ["bash", "fish"]
+    option :otp, type: :string
     def getkey
       client = Client.new
 
@@ -19,7 +20,7 @@ module Oneaws
         app_id: ENV['ONELOGIN_APP_ID'],
         subdomain: ENV['ONELOGIN_SUBDOMAIN'],
       }
-      credential = client.issue_credential(params)
+      credential = client.issue_credential(params, options[:otp])
 
       if options["update_aws_credentials"]
         credential_file = File.expand_path(find_credentials)
