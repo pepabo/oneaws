@@ -16,7 +16,7 @@ export ONELOGIN_APP_ID=<your onelogin app_id>
 export ONELOGIN_SUBDOMAIN=<your onelogin subdomain>
 export AWS_ROLE_ARN=<your aws role arn>
 export AWS_PRINCIPAL_ARN=<your aws idp arn>
-export DURATION_SECONDS=<token duration(sec)> # Option: default 3600
+export DURATION_SECONDS=<token duration(sec)> # Option: default 28800
 
 # fish
 set -x ONELOGIN_CLIENT_ID <your onelogin client id>
@@ -27,7 +27,7 @@ set -x ONELOGIN_APP_ID <your onelogin app_id>
 set -x ONELOGIN_SUBDOMAIN <your onelogin subdomain>
 set -x AWS_ROLE_ARN <your aws role arn>
 set -x AWS_PRINCIPAL_ARN <your aws idp arn>
-set -x DURATION_SECONDS <token duration(sec)> # Option: default 3600
+set -x DURATION_SECONDS <token duration(sec)> # Option: default 28800
 ```
 
 環境変数を設定したら実行します。

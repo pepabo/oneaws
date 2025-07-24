@@ -66,7 +66,7 @@ module Oneaws
       saml_assertion = response.saml_response
 
       params = {
-        duration_seconds: (ENV['DURATION_SECONDS'] || 3600).to_i,
+        duration_seconds: (ENV['DURATION_SECONDS'] || 28800).to_i,
         principal_arn: ENV['AWS_PRINCIPAL_ARN'],
         role_arn: ENV['AWS_ROLE_ARN'],
         saml_assertion: saml_assertion,
