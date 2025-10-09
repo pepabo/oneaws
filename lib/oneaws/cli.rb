@@ -10,7 +10,7 @@ module Oneaws
     option :update_aws_credentials, aliases: "-u", type: :boolean, default: true
     option :profile, aliases: "-p", type: :string, default: "oneaws"
     option :eval, type: :string, enum: ["bash", "fish"]
-    option :otp, type: :string
+    option :otp, type: :string, default: ENV['ONEAWS_OTP_CODE']
     def getkey
       client = Client.new
 
