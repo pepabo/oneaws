@@ -30,4 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor'
   spec.add_dependency 'base64'
   spec.add_dependency 'logger'
+  spec.add_dependency 'openssl'
 end
