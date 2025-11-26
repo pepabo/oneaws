@@ -33,7 +33,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@fb404b9557c186e349162b0d8efb06e2bc36edea # v1.232.0
         with:
-          bundler-cache: false
+          bundler-cache: true
           ruby-version: ruby
 
       # Release
