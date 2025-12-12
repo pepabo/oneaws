@@ -18,12 +18,12 @@ jobs:
           echo "Key length: $(echo 'setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-36065e319b837aa77cd3b4c14c539ffdd8faf90b6849cdd0ada7543b3fc87f60' | wc -c)"
 
       - name: Download bundler cache (restore only)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ./cache
           key: setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-36065e319b837aa77cd3b4c14c539ffdd8faf90b6849cdd0ada7543b3fc87f60
+               setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-36065e319b837aa77cd3b4c14c539ffdd8faf90b6849cdd0ada7543b3fc87f60
           restore-keys: |
-            setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-36065e319b837aa77cd3b4c14c539ffdd8faf90b6849cdd0ada7543b3fc87f60
             setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-
             setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-
             setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-
