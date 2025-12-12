@@ -1,48 +1,43 @@
-name: Publish gem to rubygems.org
+name: Debug bundler cache
 
 on:
   pull_request:
-
-permissions:
-  contents: read
+  workflow_dispatch:
 
 jobs:
-  push:
-    if: github.repository == 'pepabo/oneaws'
+  debug-cache:
     runs-on: ubuntu-latest
-
-    environment:
-      name: rubygems.org
-      url: https://rubygems.org/gems/oneaws
-
-    permissions:
-      contents: write
-      id-token: write
-
     steps:
-      # Set up
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+      - uses: actions/checkout@v4
+
+      - name: Download bundler cache (restore only)
+        uses: actions/cache/restore@v4
         with:
-          egress-policy: audit
+          path: ./cache
+          key: setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-36065e319b837aa77cd3b4c14c539ffdd8faf90b6849cdd0ada7543b3fc87f60
+          restore-keys: |
+            setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.3-wd-/home/runner/work/oneaws/oneaws-with--without--only--Gemfile.lock-
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@fb404b9557c186e349162b0d8efb06e2bc36edea # v1.232.0
-        with:
-          bundler-cache: true
-          ruby-version: ruby
-          bundler: latest
-
-      ## Release
-      #- name: Publish to RubyGems
-      #  uses: rubygems/release-gem@9e85cb11501bebc2ae661c1500176316d3987059 # v1
-
-      - name: debug
+      - name: List cache contents
         run: |
-          set -x
-          bundle exec gem list
-          cat Gemfile.lock || true
-          bundle exec rake -T
-          bundle exec rake build
+          echo "Cache directory contents:"
+          ls -la ./cache || echo "Cache directory not found"
+          echo ""
+          echo "Recursive cache directory listing:"
+          ls -laR ./cache || echo "Cache directory not found for recursive listing"
+          echo ""
+          find ./cache -type f -name "*.lock" 2>/dev/null || echo "No .lock files found"
+
+      - name: Show current Gemfile.lock
+        run: |
+          echo "Current Gemfile.lock contents:"
+          if [ -f Gemfile.lock ]; then
+            cat Gemfile.lock
+          else
+            echo "Gemfile.lock not found in current directory"
+          fi
+
+      - name: Search for Gemfile.lock in cache
+        run: |
+          echo "Searching for Gemfile.lock in cache directory:"
+          find ./cache -name "Gemfile.lock" -type f -exec echo "Found: {}" \; -exec cat {} \; 2>/dev/null || echo "No Gemfile.lock found in cache"
